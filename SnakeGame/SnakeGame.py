@@ -132,18 +132,18 @@ def redrawWindow(surface):
     pygame.display.update()
     
 
-def randomSnack(rows,items):
-    global rows
-    positions=items.body
-    while True:
-        x= random.randrange(rows)
-        y=random.randrange(rows)
-        if len(list(filter(lambda z:z.pos==(x,y),positions)))>0:
-            continue
-        else:
-            break
-    return(x,y)
-        
+#def randomSnack(rows,items):
+#    global rows
+#    positions=items.body
+#    while True:
+#        x= random.randrange(rows)
+#        y=random.randrange(rows)
+#        if len(list(filter(lambda z:z.pos==(x,y),positions)))>0:
+#            continue
+#        else:
+#            break
+#    return(x,y)
+#        
 
 def messageBox(subject,content):
     pass
