@@ -134,7 +134,7 @@ def redrawWindow(surface):
 
 def randomSnack(rows,items):
     global rows
-    position=item.body
+    positions=items.body
     while True:
         x= random.randrange(rows)
         y=random.randrange(rows)
