@@ -94,17 +94,30 @@ class snake(object):
                 c.move(turn[0],turn[1])
                 if i == len(self.body)-1:
                     self.turns.pop(p)
-                else:##colision detector
-                    if c.dirnx==-1 and c.pos[0]<=0: c.pos=(c.rows-1,c.pos[1])
-                    elif c.dirnx==1 and c.pos[0]<=c.rows-1: c.pos=(0,c.pos[1])
-                    elif c.dirnx==1 and c.pos[0]<=c.rows-1: c.pos=(c.pos[0],0)
-                    elif c.dirnx==-1 and c.pos[0]<=0: c.pos=(c.pos[0],c.rows-1)
-                    else: c.move(c.dirnx,c.dirny)
+            else:##colision detector
+                if c.dirnx==-1 and c.pos[0]<=0: c.pos=(c.rows-1,c.pos[1])
+                elif c.dirnx==1 and c.pos[0]>=c.rows-1: c.pos=(0,c.pos[1])
+                elif c.dirnx==1 and c.pos[0]>=c.rows-1: c.pos=(c.pos[0],0)
+                elif c.dirnx==-1 and c.pos[0]<=0: c.pos=(c.pos[0],c.rows-1)
+                else: c.move(c.dirnx,c.dirny)
                     
     def reset(self,pos):
         pass
-    def addCube(self):
-        pass
+    def addCube(self): #Where are we adding the cube to the tail
+        tail=self.body[-1]
+        dx,dy=tail.dirnx,tail.dirny
+        
+        if dx==1 and dy==0:
+            self.body.append(cube((tail.pos[0]-1),tail.pos[1]))
+        elif dx==-1 and dy ==0:
+            self.body.append(cube((tail.pos[0]+1),tail.pos[1]))
+        elif dx==0 and dy==1:
+            self.body.append(cube((tail.pos[0]),tail.pos[1]-1))
+        elif dx==0 and dy==-1:
+            self.body.append(cube((tail.pos[0]),tail.pos[1]+1))
+        
+        self.body[-1].dirnx=dx
+        self.body[-1].dirny=dy
     def draw(self,surface):
         for i ,c in enumerate(self.body):
             if i==0:
@@ -125,43 +138,48 @@ def drawGrid(w,rows,surface):
         pygame.draw.line(surface,(255,255,255,),(0,y),(w,y)) #draw line accros the screen
 
 def redrawWindow(surface):
-    global rows, width , s
+    global rows, width , s, snack
     surface.fill((0,0,0))
     s.draw(surface)
+    snack.draw(surface)
     drawGrid(width,rows,surface)
     pygame.display.update()
     
 
-#def randomSnack(rows,items):
-#    global rows
-#    positions=items.body
-#    while True:
-#        x= random.randrange(rows)
-#        y=random.randrange(rows)
-#        if len(list(filter(lambda z:z.pos==(x,y),positions)))>0:
-#            continue
-#        else:
-#            break
-#    return(x,y)
-#        
+def randomSnack(rows,items):
+    positions=items.body
+    while True:
+        x= random.randrange(rows)
+        y=random.randrange(rows)
+        if len(list(filter(lambda z:z.pos==(x,y),positions)))>0:
+            continue
+        else:
+            break
+    return(x,y)
+        
 
 def messageBox(subject,content):
     pass
 def main():
-    global width, rows , s
+    global width, rows , s, snack
     width=500
     rows=20
     pygame.init()
     surface=pygame.display.set_mode((width,width)) #Create a Surface //widthxheight
     pygame.display.set_caption('SnakeProgram')
     s=snake((255,0,0),(10,10))
+    snack=cube((randomSnack(rows,s)),color=(0,255,0))
     flag=True
     clock=pygame.time.Clock()
     while flag:
         #pygame.event.wait()
-        pygame.time.delay(50) #Additional delays
+        pygame.time.delay(10) #Additional delays
         clock.tick(10) #Not faster than 10 frame per sec
         s.move()
+        if s.body[0].pos==snack.pos:
+            s.addCube()
+            snack=cube((randomSnack(rows,s)),color=(0,255,0))
+            
         redrawWindow(surface)
         
 
