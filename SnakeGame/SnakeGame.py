@@ -28,6 +28,12 @@ class cube(object):
             self.dirnx=1 ##Start snake moving
             self.dirny=0
             self.color=color
+            print(type(self))
+            print(self)
+            print(self.pos)
+            print(self.dirnx)
+            print(self.dirny)
+            print(self.color)
             
         def move(self,dirnx,dirny):
             self.dirnx=dirnx
@@ -59,6 +65,12 @@ class snake(object):
         self.body.append(self.head)
         self.dirnx=0
         self.dirny=1 #Can only move in one direction at same time
+        print(type(self))
+        print(self)
+        print(self.colors)
+        print(self.head)
+        print (self.body)
+        print (self.dirnx, self.dirny)
         
     def move(self):
         for event in pygame.event.get():
@@ -102,7 +114,10 @@ class snake(object):
                 elif c.dirny==-1 and c.pos[1]<=0: c.pos=(c.pos[0],c.rows-1)
                 else: c.move(c.dirnx,c.dirny)
                     
-    def reset(self,pos):
+#    def reset(self,pos):
+#        s.body.clear()
+#        s.
+        
         pass
     def addCube(self): #Where are we adding the cube to the tail
         tail=self.body[-1]
@@ -184,6 +199,13 @@ def main():
         if s.body[0].pos==snack.pos:
             s.addCube()
             snack=cube(randomSnack(rows,s),color=(0,255,0))
+            
+        for x in range(len(s.body)):
+            if s.body[x].pos in list(map(lambda z:z.pos, s.body[x+1:])): #maps all s.body[i].pos, check if head colided with a later cube
+                print("Score:"+str(len(s.body)))
+               # message_box()
+               # s.reset(random.randrange(rows),random.randrange(rows)) #reset at a random pos,why not
+                break;
         
         redrawWindow(surface)
         
