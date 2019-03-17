@@ -36,6 +36,7 @@ class cube(object):
             
         def draw(self,surface,eyes=False):
             dis=self.w//self.rows
+            #print(type(self.pos[0]))
             i=self.pos[0]
             j=self.pos[1]
             
@@ -97,27 +98,31 @@ class snake(object):
             else:##colision detector
                 if c.dirnx==-1 and c.pos[0]<=0: c.pos=(c.rows-1,c.pos[1])
                 elif c.dirnx==1 and c.pos[0]>=c.rows-1: c.pos=(0,c.pos[1])
-                elif c.dirnx==1 and c.pos[0]>=c.rows-1: c.pos=(c.pos[0],0)
-                elif c.dirnx==-1 and c.pos[0]<=0: c.pos=(c.pos[0],c.rows-1)
+                elif c.dirny==1 and c.pos[1]>=c.rows-1: c.pos=(c.pos[0],0)
+                elif c.dirny==-1 and c.pos[1]<=0: c.pos=(c.pos[0],c.rows-1)
                 else: c.move(c.dirnx,c.dirny)
                     
     def reset(self,pos):
         pass
     def addCube(self): #Where are we adding the cube to the tail
         tail=self.body[-1]
-        dx,dy=tail.dirnx,tail.dirny
+        print(self.body[-1])
+        dx=tail.dirnx
+        dy=tail.dirny
         
         if dx==1 and dy==0:
-            self.body.append(cube((tail.pos[0]-1),tail.pos[1]))
+            self.body.append(cube((tail.pos[0]-1,tail.pos[1])))
         elif dx==-1 and dy ==0:
-            self.body.append(cube((tail.pos[0]+1),tail.pos[1]))
+            self.body.append(cube((tail.pos[0]+1,tail.pos[1])))
         elif dx==0 and dy==1:
-            self.body.append(cube((tail.pos[0]),tail.pos[1]-1))
+            self.body.append(cube((tail.pos[0],tail.pos[1]-1)))
         elif dx==0 and dy==-1:
-            self.body.append(cube((tail.pos[0]),tail.pos[1]+1))
+            self.body.append(cube((tail.pos[0],tail.pos[1]+1)))
         
         self.body[-1].dirnx=dx
         self.body[-1].dirny=dy
+        
+        
     def draw(self,surface):
         for i ,c in enumerate(self.body):
             if i==0:
@@ -155,7 +160,7 @@ def randomSnack(rows,items):
             continue
         else:
             break
-    return(x,y)
+    return (x,y)
         
 
 def messageBox(subject,content):
@@ -168,18 +173,18 @@ def main():
     surface=pygame.display.set_mode((width,width)) #Create a Surface //widthxheight
     pygame.display.set_caption('SnakeProgram')
     s=snake((255,0,0),(10,10))
-    snack=cube((randomSnack(rows,s)),color=(0,255,0))
+    snack=cube(randomSnack(rows,s),color=(0,255,0))
     flag=True
     clock=pygame.time.Clock()
     while flag:
         #pygame.event.wait()
-        pygame.time.delay(10) #Additional delays
+        pygame.time.delay(50) #Additional delays
         clock.tick(10) #Not faster than 10 frame per sec
         s.move()
         if s.body[0].pos==snack.pos:
             s.addCube()
-            snack=cube((randomSnack(rows,s)),color=(0,255,0))
-            
+            snack=cube(randomSnack(rows,s),color=(0,255,0))
+        
         redrawWindow(surface)
         
 
