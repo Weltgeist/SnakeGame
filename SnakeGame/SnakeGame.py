@@ -16,9 +16,8 @@ import random
 import pygame
 from pygame import *
 from pygame.locals import *
-#from pygame.locals import *
-#import tkinter as tk
-#from tkinter import messagebox
+import tkinter as tk
+from tkinter import messagebox
 
 class cube(object):
         rows=20
@@ -31,9 +30,9 @@ class cube(object):
             print(type(self))
             print(self)
             print(self.pos)
-            print(self.dirnx)
-            print(self.dirny)
-            print(self.color)
+            #print(self.dirnx)
+            #print(self.dirny)
+            #print(self.color)
             
         def move(self,dirnx,dirny):
             self.dirnx=dirnx
@@ -67,10 +66,10 @@ class snake(object):
         self.dirny=1 #Can only move in one direction at same time
         print(type(self))
         print(self)
-        print(self.colors)
-        print(self.head)
-        print (self.body)
-        print (self.dirnx, self.dirny)
+        #print(self.colors)
+        #print(self.head)
+        #print (self.body)
+        #print (self.dirnx, self.dirny)
         
     def move(self):
         for event in pygame.event.get():
@@ -114,9 +113,18 @@ class snake(object):
                 elif c.dirny==-1 and c.pos[1]<=0: c.pos=(c.pos[0],c.rows-1)
                 else: c.move(c.dirnx,c.dirny)
                     
-#    def reset(self,pos):
-#        s.body.clear()
-#        s.
+    def reset(self,pos):
+        self.body.clear() #eq []?
+        self.turns.clear() #eq {}?
+        self.head=cube(pos)
+        self.body.append(self.head)
+        if self.dirnx==1:
+            self.dirnx=0 ##Start snake moving
+            self.dirny=1
+        else:
+            self.dirnx=1 ##Start snake moving
+            self.dirny=0
+        
         
         pass
     def addCube(self): #Where are we adding the cube to the tail
@@ -179,7 +187,15 @@ def randomSnack(rows,items):
         
 
 def messageBox(subject,content):
-    pass
+    root=tk.Tk()
+    root.attributes("-topmost",True)
+    root.withdraw()
+    messagebox.showinfo(subject,content)
+    try:
+        root.destroy()
+    except:
+        pass
+    
 def main():
     global width, rows , s, snack
     width=500
@@ -203,8 +219,8 @@ def main():
         for x in range(len(s.body)):
             if s.body[x].pos in list(map(lambda z:z.pos, s.body[x+1:])): #maps all s.body[i].pos, check if head colided with a later cube
                 print("Score:"+str(len(s.body)))
-               # message_box()
-               # s.reset(random.randrange(rows),random.randrange(rows)) #reset at a random pos,why not
+                messageBox("You lost! ","Your Score was:"+str(len(s.body))+"\nPlay again")
+                s.reset((random.randrange(rows),random.randrange(rows))) #reset at a random pos,why not
                 break;
         
         redrawWindow(surface)
